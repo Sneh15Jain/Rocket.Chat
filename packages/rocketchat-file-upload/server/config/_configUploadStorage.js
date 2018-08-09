@@ -2,6 +2,7 @@
 
 import _ from 'underscore';
 import './AmazonS3.js';
+import './IPFSStorage.js';
 import './FileSystem.js';
 import './GoogleStorage.js';
 import './GridFS.js';

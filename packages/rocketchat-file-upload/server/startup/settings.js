@@ -31,6 +31,9 @@ RocketChat.settings.addGroup('FileUpload', function() {
 			key: 'AmazonS3',
 			i18nLabel: 'AmazonS3'
 		}, {
+			key: 'IpfsStorage',
+			i18nLabel: 'IpfsStorage'
+		}, {
 			key: 'GoogleCloudStorage',
 			i18nLabel: 'GoogleCloudStorage'
 		}, {
@@ -170,6 +173,33 @@ RocketChat.settings.addGroup('FileUpload', function() {
 			enableQuery: {
 				_id: 'FileUpload_Storage_Type',
 				value: 'GoogleCloudStorage'
+			}
+		});
+	});
+
+	this.section('IPFS', function() {
+		this.add('FileUpload_IpfsStorage_Folder', '', {
+			type: 'string',
+			private: true,
+			enableQuery: {
+				_id: 'FileUpload_Storage_Type',
+				value: 'IpfsStorage'
+			}
+		});
+		this.add('FileUpload_IpfsStorage_Secret', '', {
+			type: 'string',
+			multiline: true,
+			private: true,
+			enableQuery: {
+				_id: 'FileUpload_Storage_Type',
+				value: 'IpfsStorage'
+			}
+		});
+		this.add('FileUpload_IpfsStorage_Provider', '', {
+			type: 'string',
+			enableQuery: {
+				_id: 'FileUpload_Storage_Type',
+				value: 'IpfsStorage'
 			}
 		});
 	});

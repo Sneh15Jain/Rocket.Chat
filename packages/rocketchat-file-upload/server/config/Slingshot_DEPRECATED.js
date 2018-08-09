@@ -104,7 +104,9 @@ const createGoogleStorageDirective = _.debounce(() => {
 		};
 
 		try {
+			console.log(Slingshot.GoogleCloud);
 			Slingshot.createDirective('rocketchat-uploads-gs', Slingshot.GoogleCloud, config);
+			console.log(Slingshot.GoogleCloud);
 		} catch (e) {
 			console.error('Error configuring GoogleCloudStorage ->', e.message);
 		}
@@ -113,3 +115,52 @@ const createGoogleStorageDirective = _.debounce(() => {
 
 RocketChat.settings.get('FileUpload_Storage_Type', createGoogleStorageDirective);
 RocketChat.settings.get(/^FileUpload_GoogleStorage_/, createGoogleStorageDirective);
+
+
+const createIpfsStorageDirective = _.debounce(() => {
+	const type = RocketChat.settings.get('FileUpload_Storage_Type');
+	const provider = RocketChat.settings.get('FileUpload_IpfsStorage_Provider');
+	const folder = RocketChat.settings.get('FileUpload_IpfsStorage_Folder');
+	const secret = RocketChat.settings.get('FileUpload_IpfsStorage_Secret');
+
+	delete Slingshot._directives['rocketchat-uploads-is'];
+
+	if (type === 'IpfsStorage' && !_.isEmpty(secret) && !_.isEmpty(provider) && !_.isEmpty(folder)) {
+		if (Slingshot._directives['rocketchat-uploads-is']) {
+			delete Slingshot._directives['rocketchat-uploads-is'];
+		}
+
+		const config = {
+			folder,
+			IPFSProvider: provider,
+			IPFSSecretKey: secret,
+			key(file, metaContext) {
+				const id = Random.id();
+				const path = `${ RocketChat.settings.get('uniqueID') }/uploads/${ metaContext.rid }/${ this.userId }/${ id }`;
+
+				const upload = {
+					_id: id,
+					rid: metaContext.rid,
+					IPFSStorage: {
+						path
+					}
+				};
+
+				RocketChat.models.Uploads.insertFileInit(this.userId, 'IpfsStorage:Uploads', file, upload);
+
+				return path;
+			}
+		};
+
+		try {
+			console.log(Slingshot.IPFSStorage);
+			Slingshot.createDirective('rocketchat-uploads-is', Slingshot.IpfsStorageStore, config);
+			console.log(Slingshot.IPFSStorage);
+		} catch (e) {
+			console.error('Error configuring IpfsStorage ->', e.message);
+		}
+	}
+}, 500);
+
+RocketChat.settings.get('FileUpload_Storage_Type', createIpfsStorageDirective);
+RocketChat.settings.get(/^FileUpload_IPFSStorage_/, createIpfsStorageDirective);
