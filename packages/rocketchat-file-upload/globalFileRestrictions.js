@@ -28,3 +28,4 @@ const slingShotConfig = {
 Slingshot.fileRestrictions('rocketchat-uploads', slingShotConfig);
 Slingshot.fileRestrictions('rocketchat-uploads-gs', slingShotConfig);
 Slingshot.fileRestrictions('rocketchat-uploads-is', slingShotConfig);
+
