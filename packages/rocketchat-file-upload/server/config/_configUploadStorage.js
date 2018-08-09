@@ -21,3 +21,4 @@ const configStore = _.debounce(() => {
 }, 1000);
 
 RocketChat.settings.get(/^FileUpload_/, configStore);
+
